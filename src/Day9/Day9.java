@@ -17,7 +17,7 @@ public class Day9 {
         System.out.println("Part 2: " + part2(PATH));
     }
 
-    private record Pair<T>(T left, T right, T child, Day9.Day9.Pair<T> leftParent, Day9.Day9.Pair<T> rightParent) {
+    private record Pair<T>(T left, T right, T child, Pair<T> leftParent,Pair<T> rightParent) {
         @Override
         public String toString() {
             return left.toString() + " - " + right.toString();
