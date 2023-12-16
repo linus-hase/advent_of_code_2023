@@ -143,7 +143,6 @@ public class Day7 {
         try(BufferedReader br = new BufferedReader(new FileReader(line))) {
             List<String> l = new ArrayList<>(br.lines().toList());
             l.sort(new HandComparator(2));
-            System.out.println(l);
             for (int i = 0; i < l.size(); i++) {
                 result += (i + 1) * Integer.parseInt(l.get(i).substring(l.get(i).indexOf(" ") + 1));
             }
