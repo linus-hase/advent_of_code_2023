@@ -10,21 +10,28 @@ import java.util.stream.Collectors;
 
 public class Day8 {
 
-    private static final String PATH = "./src/Day8/input.txt";
+    private static final String PATH    = "./src/Day8/input.txt";
     private static final String EXAMPLE = "./src/Day8/example.txt";
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Part 1: " + Day8.part1(PATH));
-        System.out.println("Part 2: " + Day8.part2(PATH));
+        try (BufferedReader br = new BufferedReader(new FileReader(PATH))) {
+            String path = br.readLine() + br.readLine();
+            Map<String, Pair<String, String>> m = br.lines().collect(
+                    Collectors.toMap(l -> l.substring(0, l.indexOf(" ")), l ->
+                            new Pair<>(l.substring(l.indexOf("(") + 1, l.indexOf(",")),
+                                       l.substring(l.indexOf(",") + 2, l.indexOf(")")))));
+            System.out.println("Part 1: " + countSteps(path, m));
+            System.out.println("Part 2: " + countSimultaneousSteps(path, m));
+        }
     }
 
-    private static class Pair<L,R> {
+    private static class Pair<L, R> {
         private L left;
 
         private R right;
 
         public Pair(L left, R right) {
-            this.left = left;
+            this.left  = left;
             this.right = right;
         }
 
@@ -50,9 +57,9 @@ public class Day8 {
         }
     }
 
-    private static int countSteps(String path, Map<String, Pair<String,String>> m) {
-        int result = 0;
-        Pair<String,String> curr = m.get("AAA");
+    private static int countSteps(String path, Map<String, Pair<String, String>> m) {
+        int                  result = 0;
+        Pair<String, String> curr   = m.get("AAA");
         for (int c = 0; c < path.length(); c++) {
             result++;
             String newStr;
@@ -72,9 +79,9 @@ public class Day8 {
         return result;
     }
 
-    private static long countSimultaneousSteps(String path, Map<String, Pair<String,String>> m) {
-        long result;
-        Map<String,Pair<String,Pair<Integer,Boolean>>> starts = new HashMap<>();
+    private static long countSimultaneousSteps(String path, Map<String, Pair<String, String>> m) {
+        long                                              result;
+        Map<String, Pair<String, Pair<Integer, Boolean>>> starts = new HashMap<>();
         for (String s : m.keySet()) {
             if (s.endsWith("A")) {
                 starts.put(s, new Pair<>(s, new Pair<>(0, false)));
@@ -121,41 +128,15 @@ public class Day8 {
         if (a == 0 || b == 0) {
             return 0;
         }
-        long absNumber1 = Math.abs(a);
-        long absNumber2 = Math.abs(b);
+        long absNumber1      = Math.abs(a);
+        long absNumber2      = Math.abs(b);
         long absHigherNumber = Math.max(absNumber1, absNumber2);
-        long absLowerNumber = Math.min(absNumber1, absNumber2);
-        long lcm = absHigherNumber;
+        long absLowerNumber  = Math.min(absNumber1, absNumber2);
+        long lcm             = absHigherNumber;
         while (lcm % absLowerNumber != 0) {
             lcm += absHigherNumber;
         }
         return lcm;
     }
-
-    private static int part1(String line) throws IOException {
-        int result;
-        try(BufferedReader br = new BufferedReader(new FileReader(line))) {
-            String path = br.readLine() + br.readLine();
-            Map<String, Pair<String,String>> m = br.lines().collect(
-                    Collectors.toMap(l -> l.substring(0, l.indexOf(" ")), l ->
-                            new Pair<>(l.substring(l.indexOf("(") + 1, l.indexOf(",")),
-                                       l.substring(l.indexOf(",") + 2, l.indexOf(")")))));
-            result = countSteps(path, m);
-        }
-        return result;
-    }
-
-    private static long part2(String line) throws IOException {
-        long result;
-        try(BufferedReader br = new BufferedReader(new FileReader(line))) {
-            String path = br.readLine() + br.readLine();
-            Map<String, Pair<String,String>> m = br.lines().collect(
-                    Collectors.toMap(l -> l.substring(0, l.indexOf(" ")), l ->
-                            new Pair<>(l.substring(l.indexOf("(") + 1, l.indexOf(",")),
-                                       l.substring(l.indexOf(",") + 2, l.indexOf(")")))));
-            result = countSimultaneousSteps(path, m);
-        }
-        return result;
-    }
-
 }
+
